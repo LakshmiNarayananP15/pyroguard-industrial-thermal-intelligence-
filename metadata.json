@@ -1,0 +1,6 @@
+{
+  "name": "PyroGuard Industrial Thermal & Fire Intelligence",
+  "description": "Real-time thermal anomaly visualization and industrial wildfire risk early-warning system integrating NASA FIRMS satellite data, high-risk hazard proximity detection, blast radius modeling, and responder push notifications.",
+  "requestFramePermissions": ["notifications", "geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
