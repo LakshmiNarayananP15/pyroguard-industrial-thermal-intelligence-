@@ -1,17 +1,122 @@
 @import "tailwindcss";
 
-/* Leaflet Dark Tactical Theme Custom Overrides */
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #030508;
+    color: #f1f5f9;
+  }
+  
+  code, kbd, samp, pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Glassmorphism & Cyber Black-Orange Tokens */
+.glass-panel {
+  background: rgba(6, 9, 15, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(249, 115, 22, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-subtle {
+  background: rgba(10, 14, 23, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.4);
+}
+
+.glass-card {
+  background: rgba(12, 17, 29, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(249, 115, 22, 0.12);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(18, 24, 38, 0.65);
+  border-color: rgba(249, 115, 22, 0.38);
+  box-shadow: 0 0 20px -3px rgba(249, 115, 22, 0.2);
+}
+
+.glass-button {
+  background: rgba(15, 20, 32, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.glass-button:hover {
+  background: rgba(249, 115, 22, 0.15);
+  border-color: rgba(249, 115, 22, 0.45);
+  color: #ffedd5;
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.25);
+}
+
+.glow-orange {
+  text-shadow: 0 0 12px rgba(249, 115, 22, 0.6);
+}
+
+.glow-orange-box {
+  box-shadow: 0 0 20px -2px rgba(249, 115, 22, 0.35);
+}
+
+.glow-orange-subtle {
+  box-shadow: 0 0 12px -2px rgba(249, 115, 22, 0.18);
+}
+
+/* Ambient Radial Orange Lighting in Background */
+.bg-ambient-glow {
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(249, 115, 22, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(234, 88, 12, 0.06), transparent),
+    radial-gradient(ellipse 50% 30% at 10% 90%, rgba(249, 115, 22, 0.04), transparent);
+}
+
+/* Scrollbar elimination utilities */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom sleek slim scrollbar for data feeds */
+.scrollbar-glass::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.scrollbar-glass::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+.scrollbar-glass::-webkit-scrollbar-thumb {
+  background: rgba(249, 115, 22, 0.25);
+  border-radius: 9999px;
+}
+.scrollbar-glass::-webkit-scrollbar-thumb:hover {
+  background: rgba(249, 115, 22, 0.5);
+}
+
+/* Leaflet Tactical Dark & Glassy Overrides */
 .leaflet-container {
-  background-color: #020617 !important;
+  background-color: #030508 !important;
   font-family: inherit;
 }
 
 .custom-leaflet-popup .leaflet-popup-content-wrapper {
-  background: #020617 !important;
+  background: rgba(6, 9, 15, 0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
   color: #f8fafc !important;
-  border: 1px solid #334155 !important;
+  border: 1px solid rgba(249, 115, 22, 0.35) !important;
   border-radius: 12px !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.7) !important;
+  box-shadow: 0 20px 30px -5px rgba(0, 0, 0, 0.8), 0 0 20px rgba(249, 115, 22, 0.2) !important;
   padding: 0 !important;
 }
 
@@ -21,19 +126,20 @@
 }
 
 .custom-leaflet-popup .leaflet-popup-tip {
-  background: #020617 !important;
-  border: 1px solid #334155 !important;
+  background: rgba(6, 9, 15, 0.92) !important;
+  border: 1px solid rgba(249, 115, 22, 0.35) !important;
 }
 
 .leaflet-dark-tooltip {
-  background: #020617 !important;
+  background: rgba(6, 9, 15, 0.88) !important;
+  backdrop-filter: blur(8px) !important;
   color: #f1f5f9 !important;
-  border: 1px solid #334155 !important;
+  border: 1px solid rgba(249, 115, 22, 0.25) !important;
   border-radius: 6px !important;
   padding: 4px 8px !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6) !important;
 }
 
 .leaflet-dark-tooltip::before {
-  border-top-color: #020617 !important;
+  border-top-color: rgba(6, 9, 15, 0.88) !important;
 }

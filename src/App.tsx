@@ -260,7 +260,11 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen bg-[#070a12] text-slate-100 flex flex-col selection:bg-orange-500/30 selection:text-orange-200">
+    <div className="min-h-screen bg-[#030508] bg-ambient-glow text-slate-100 flex flex-col selection:bg-orange-500/40 selection:text-orange-200 relative overflow-x-hidden">
+      {/* Ambient background tactical glow elements */}
+      <div className="fixed top-0 left-1/4 w-96 h-96 bg-orange-600/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="fixed top-1/3 right-10 w-80 h-80 bg-amber-500/5 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="fixed bottom-10 left-10 w-96 h-96 bg-orange-700/5 rounded-full blur-[160px] pointer-events-none -z-10" />
       
       {/* 1. Header & Live Telemetry HUD */}
       <HeaderHUD
@@ -273,7 +277,6 @@ export default function App() {
         onToggleSound={() => setSoundEnabled(!soundEnabled)}
         onOpenThresholds={() => setShowThresholdsModal(true)}
         onOpenExport={() => setShowExportModal(true)}
-        onOpenFastAPI={() => setShowFastAPIModal(true)}
         onOpenWidgets={() => setShowWidgetsDrawer(true)}
         onOpenIndiaCommand={() => setShowIndiaModal(true)}
         searchTerm={searchTerm}

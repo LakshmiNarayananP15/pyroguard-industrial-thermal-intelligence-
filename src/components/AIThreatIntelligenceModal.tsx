@@ -219,21 +219,21 @@ export const AIThreatIntelligenceModal: React.FC<AIThreatIntelligenceModalProps>
   const activeProviderObj = PROVIDERS.find((p) => p.id === selectedProvider);
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-slate-950/85 backdrop-blur-md">
-      <div className="bg-slate-950 border border-slate-800 rounded-2xl w-full max-w-4xl max-h-[96vh] sm:max-h-[90vh] flex flex-col shadow-2xl overflow-hidden font-mono text-slate-100">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-xl">
+      <div className="bg-black/95 border border-orange-500/30 rounded-2xl w-full max-w-4xl max-h-[96vh] sm:max-h-[90vh] flex flex-col shadow-[0_20px_60px_rgba(0,0,0,0.95)] overflow-hidden font-mono text-slate-100">
         
         {/* Modal Header */}
-        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-slate-800 bg-slate-900/60">
+        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-orange-500/20 bg-black/80">
           <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-            <div className="p-2 sm:p-2.5 rounded-xl bg-orange-950/70 border border-orange-500/40 text-orange-400 flex-shrink-0">
+            <div className="p-2 sm:p-2.5 rounded-xl bg-black/80 border border-orange-500/40 text-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.3)] flex-shrink-0">
               <BrainCircuit className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                <h3 className="text-xs sm:text-base font-bold text-slate-100 tracking-wide truncate">
+                <h3 className="text-xs sm:text-base font-bold text-white tracking-wide truncate glow-orange">
                   AI Hazard & Incident Co-Pilot
                 </h3>
-                <span className="px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                <span className="px-2 py-0.5 rounded text-[9px] sm:text-[10px] bg-orange-500/20 text-orange-300 border border-orange-500/40 shadow-[0_0_10px_rgba(249,115,22,0.2)]">
                   LIVE ADVISOR
                 </span>
               </div>
@@ -244,7 +244,7 @@ export const AIThreatIntelligenceModal: React.FC<AIThreatIntelligenceModalProps>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer flex-shrink-0"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-orange-400 hover:bg-white/10 transition-colors cursor-pointer flex-shrink-0"
           >
             <X className="w-5 h-5" />
           </button>

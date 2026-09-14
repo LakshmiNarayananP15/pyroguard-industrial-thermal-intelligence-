@@ -101,17 +101,17 @@ export const ThresholdSettingsModal: React.FC<ThresholdSettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 bg-slate-950/85 backdrop-blur-md font-mono text-slate-100">
-      <div className="bg-slate-950 border border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 bg-black/85 backdrop-blur-xl font-mono text-slate-100">
+      <div className="bg-black/95 border border-orange-500/30 rounded-2xl w-full max-w-lg shadow-[0_20px_60px_rgba(0,0,0,0.95)] overflow-hidden flex flex-col max-h-[90vh]">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900/60">
+        <div className="flex items-center justify-between p-4 border-b border-orange-500/20 bg-black/80">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-orange-950/70 border border-orange-500/40 text-orange-400">
+            <div className="p-2 rounded-xl bg-black/80 border border-orange-500/40 text-orange-400 shadow-[0_0_12px_rgba(249,115,22,0.3)]">
               <Settings className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-sm font-bold tracking-wide uppercase text-slate-100">
+              <h2 className="text-sm font-bold tracking-wide uppercase text-white glow-orange">
                 NASA FIRMS & Emergency Thresholds
               </h2>
               <div className="text-[11px] text-slate-400">
@@ -122,7 +122,7 @@ export const ThresholdSettingsModal: React.FC<ThresholdSettingsModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-100 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-orange-400 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -304,7 +304,7 @@ export const ThresholdSettingsModal: React.FC<ThresholdSettingsModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-4 border-t border-slate-800 bg-slate-900/60">
+        <div className="flex items-center justify-between p-4 border-t border-orange-500/20 bg-black/80">
           <div>
             {savedMessage && (
               <span className="text-emerald-400 text-xs flex items-center gap-1 font-bold">
@@ -316,13 +316,13 @@ export const ThresholdSettingsModal: React.FC<ThresholdSettingsModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer"
+              className="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-semibold cursor-pointer border border-white/10"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold shadow-lg shadow-orange-950/50 cursor-pointer"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-black text-xs font-bold shadow-[0_0_15px_rgba(249,115,22,0.4)] cursor-pointer transition-all"
             >
               <Save className="w-3.5 h-3.5" />
               <span>Save & Apply</span>

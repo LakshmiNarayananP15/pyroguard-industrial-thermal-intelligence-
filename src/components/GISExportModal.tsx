@@ -66,17 +66,17 @@ export const GISExportModal: React.FC<GISExportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 bg-slate-950/85 backdrop-blur-md font-mono text-slate-100">
-      <div className="bg-slate-950 border border-slate-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 bg-black/85 backdrop-blur-xl font-mono text-slate-100">
+      <div className="bg-black/95 border border-orange-500/30 rounded-2xl w-full max-w-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] overflow-hidden flex flex-col">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-900/60">
+        <div className="flex items-center justify-between p-4 border-b border-orange-500/20 bg-black/80">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-orange-950/70 border border-orange-500/40 text-orange-400">
+            <div className="p-2 rounded-xl bg-black/80 border border-orange-500/40 text-orange-400 shadow-[0_0_12px_rgba(249,115,22,0.3)]">
               <Download className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-sm font-bold tracking-wide uppercase text-slate-100">
+              <h2 className="text-sm font-bold tracking-wide uppercase text-white glow-orange">
                 GIS Integration & Compliance Audit Export Center
               </h2>
               <div className="text-[11px] text-slate-400">
@@ -87,7 +87,7 @@ export const GISExportModal: React.FC<GISExportModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-100 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-orange-400 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>

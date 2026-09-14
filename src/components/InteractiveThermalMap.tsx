@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
-import { 
-  Layers, 
-  Flame, 
-  ShieldAlert, 
-  Compass, 
-  Wind, 
-  Maximize2, 
-  Eye, 
-  Radio, 
-  Zap, 
+import {
+  Layers,
+  Flame,
+  ShieldAlert,
+  Compass,
+  Wind,
+  Maximize2,
+  Eye,
+  Radio,
+  Zap,
   Crosshair,
   Filter,
   MapPin,
@@ -21,7 +21,8 @@ import {
   AlertTriangle,
   RotateCcw,
   Moon,
-  Satellite
+  Satellite,
+  ChevronDown
 } from 'lucide-react';
 import { ThermalAnomaly, IndustrialFacility, GISLayerConfig } from '../types';
 
@@ -71,6 +72,7 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
   const windVectorsLayerRef = useRef<L.LayerGroup | null>(null);
 
   const [activeContinent, setActiveContinent] = useState('Global');
+  const [showLocationMenu, setShowLocationMenu] = useState(false);
   const [showLayerMenu, setShowLayerMenu] = useState(false);
   const [copiedCoords, setCopiedCoords] = useState(false);
 
@@ -172,37 +174,37 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
         let iconSymbol = '🏭';
         let badgeColor = 'bg-cyan-500';
         let borderHighlight = '';
-        if (fac.type === 'nuclear_plant') { 
-          iconSymbol = '☢️'; 
-          badgeColor = 'bg-amber-400'; 
+        if (fac.type === 'nuclear_plant') {
+          iconSymbol = '☢️';
+          badgeColor = 'bg-amber-400';
           borderHighlight = 'ring-2 ring-amber-400 animate-pulse';
-        } else if (fac.type === 'petrol_bunk_hub') { 
-          iconSymbol = '⛽'; 
-          badgeColor = 'bg-blue-500'; 
-        } else if (fac.type === 'mining_complex') { 
-          iconSymbol = '⛏️'; 
-          badgeColor = 'bg-orange-600'; 
-        } else if (fac.type === 'oil_refinery') { 
-          iconSymbol = '🛢️'; 
-          badgeColor = 'bg-amber-500'; 
-        } else if (fac.type === 'chemical_plant') { 
-          iconSymbol = '🧪'; 
-          badgeColor = 'bg-purple-500'; 
-        } else if (fac.type === 'lng_terminal') { 
-          iconSymbol = '❄️'; 
-          badgeColor = 'bg-teal-500'; 
-        } else if (fac.type === 'power_plant') { 
-          iconSymbol = '⚡'; 
-          badgeColor = 'bg-yellow-500'; 
-        } else if (fac.type === 'fertilizer_plant') { 
-          iconSymbol = '🌱'; 
-          badgeColor = 'bg-emerald-500'; 
-        } else if (fac.type === 'strategic_defense') { 
-          iconSymbol = '🚀'; 
-          badgeColor = 'bg-rose-500'; 
-        } else if (fac.type === 'timber_mill') { 
-          iconSymbol = '🌲'; 
-          badgeColor = 'bg-emerald-500'; 
+        } else if (fac.type === 'petrol_bunk_hub') {
+          iconSymbol = '⛽';
+          badgeColor = 'bg-blue-500';
+        } else if (fac.type === 'mining_complex') {
+          iconSymbol = '⛏️';
+          badgeColor = 'bg-orange-600';
+        } else if (fac.type === 'oil_refinery') {
+          iconSymbol = '🛢️';
+          badgeColor = 'bg-amber-500';
+        } else if (fac.type === 'chemical_plant') {
+          iconSymbol = '🧪';
+          badgeColor = 'bg-purple-500';
+        } else if (fac.type === 'lng_terminal') {
+          iconSymbol = '❄️';
+          badgeColor = 'bg-teal-500';
+        } else if (fac.type === 'power_plant') {
+          iconSymbol = '⚡';
+          badgeColor = 'bg-yellow-500';
+        } else if (fac.type === 'fertilizer_plant') {
+          iconSymbol = '🌱';
+          badgeColor = 'bg-emerald-500';
+        } else if (fac.type === 'strategic_defense') {
+          iconSymbol = '🚀';
+          badgeColor = 'bg-rose-500';
+        } else if (fac.type === 'timber_mill') {
+          iconSymbol = '🌲';
+          badgeColor = 'bg-emerald-500';
         }
 
         const isSelected = selectedFacility?.id === fac.id;
@@ -350,11 +352,10 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
             <span class="font-bold text-orange-400 flex items-center gap-1">
               🔥 ${a.id}
             </span>
-            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${
-              threat === 'CRITICAL' ? 'bg-red-500/20 text-red-400 border border-red-500/40' :
-              threat === 'HIGH' ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' :
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${threat === 'CRITICAL' ? 'bg-red-500/20 text-red-400 border border-red-500/40' :
+            threat === 'HIGH' ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' :
               'bg-slate-800 text-slate-300'
-            }">${threat}</span>
+          }">${threat}</span>
           </div>
 
           <div class="grid grid-cols-2 gap-2 my-2 text-[11px]">
@@ -477,69 +478,100 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
   const inspectedFacility = selectedFacility || selectedAnomaly?.nearestFacility?.facility || null;
 
   return (
-    <div className="isolate relative w-full h-full min-h-[380px] sm:min-h-[460px] md:min-h-[520px] lg:min-h-[600px] xl:min-h-[660px] bg-slate-950 rounded-xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col z-0">
-      
+    <div className="isolate relative w-full h-[400px] sm:h-[460px] md:h-[490px] xl:h-[calc(100vh-145px)] xl:min-h-[630px] xl:max-h-[800px] bg-black rounded-2xl overflow-hidden border border-orange-500/25 shadow-[0_12px_40px_rgba(0,0,0,0.85)] flex flex-col z-0">
+
       {/* Top Map Control Overlay */}
-      <div 
+      <div
         onMouseDown={(e) => e.stopPropagation()}
         onTouchStart={(e) => e.stopPropagation()}
         onDoubleClick={(e) => e.stopPropagation()}
         className="absolute top-2.5 sm:top-3 left-2.5 sm:left-3 z-30 flex flex-wrap items-center gap-1.5 sm:gap-2 max-w-[calc(100%-1.5rem)] sm:max-w-[90%]"
       >
-        
-        {/* Continent Quick Jumps */}
-        <div className="flex items-center gap-1 bg-slate-950/90 backdrop-blur-md p-1 rounded-lg border border-slate-800 shadow-xl overflow-x-auto scrollbar-thin scrollbar-thumb-slate-800 max-w-full">
-          <Compass className="w-3.5 h-3.5 text-orange-400 ml-1 mr-0.5 flex-shrink-0" />
-          {CONTINENTS.map((cont) => {
-            const isSelected = activeContinent === cont.name;
-            const isIndia = cont.name === 'India';
 
-            return (
-              <button
-                type="button"
-                key={cont.name}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleContinentClick(cont);
-                }}
-                className={`px-2 sm:px-2.5 py-1 rounded text-[10px] sm:text-[11px] font-mono whitespace-nowrap transition-all cursor-pointer flex items-center gap-1 ${
-                  isSelected
-                    ? isIndia
-                      ? 'bg-gradient-to-r from-orange-500/30 via-slate-800 to-emerald-500/30 text-orange-300 font-bold border border-orange-500/50 shadow-md'
-                      : 'bg-orange-500/20 text-orange-400 font-bold border border-orange-500/30'
-                    : isIndia
-                    ? 'text-orange-400/90 hover:text-orange-300 hover:bg-orange-500/10 border border-orange-500/20'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                }`}
-              >
-                {isIndia && <span>🇮🇳</span>}
-                <span>{cont.name}</span>
-              </button>
-            );
-          })}
+        {/* Dropdown Location Navigation Button */}
+        <div className="relative flex-shrink-0">
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              handleResetView();
+              setShowLocationMenu(!showLocationMenu);
+              setShowLayerMenu(false);
             }}
-            title="Reset Global View"
-            className="p-1 rounded text-slate-400 hover:text-orange-400 hover:bg-slate-800 transition-colors cursor-pointer flex-shrink-0"
+            title={`Location Navigation: ${activeContinent}`}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-black/75 backdrop-blur-xl hover:bg-black/90 border border-orange-500/25 hover:border-orange-500/50 rounded-xl text-orange-400 shadow-xl transition-all cursor-pointer hover:shadow-[0_0_15px_rgba(249,115,22,0.25)] min-h-[34px] min-w-[34px] justify-center"
           >
-            <RotateCcw className="w-3 h-3" />
+            <Compass className="w-4 h-4 text-orange-400" />
+            <ChevronDown className={`w-3.5 h-3.5 text-orange-400/80 transition-transform duration-200 ${showLocationMenu ? 'rotate-180 text-orange-300' : ''}`} />
           </button>
+
+          {showLocationMenu && (
+            <div
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+              className="absolute left-0 mt-2 w-60 max-w-[90vw] bg-black/95 backdrop-blur-2xl border border-orange-500/30 rounded-2xl p-2.5 shadow-[0_12px_40px_rgba(0,0,0,0.9)] z-40 text-xs font-mono animate-in fade-in slide-in-from-top-2 duration-150"
+            >
+              <div className="flex items-center justify-between pb-2 mb-1.5 border-b border-white/10 px-1 text-[10px] text-orange-400 font-bold uppercase tracking-wider">
+                <span className="flex items-center gap-1.5">
+                  <Compass className="w-3.5 h-3.5" />
+                  Select Location
+                </span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleResetView();
+                    setShowLocationMenu(false);
+                  }}
+                  title="Reset Global View"
+                  className="text-slate-400 hover:text-orange-400 p-0.5 rounded transition-colors cursor-pointer"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                </button>
+              </div>
+
+              <div className="space-y-1">
+                {CONTINENTS.map((cont) => {
+                  const isSelected = activeContinent === cont.name;
+                  const isIndia = cont.name === 'India';
+
+                  return (
+                    <button
+                      type="button"
+                      key={cont.name}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleContinentClick(cont);
+                        setShowLocationMenu(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-left text-[11px] font-mono transition-all cursor-pointer ${isSelected
+                        ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-black font-extrabold shadow-[0_0_12px_rgba(249,115,22,0.4)]'
+                        : 'text-slate-300 hover:text-white hover:bg-orange-500/15'
+                        }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        {isIndia ? <span>🇮🇳</span> : <MapPin className={`w-3.5 h-3.5 ${isSelected ? 'text-black' : 'text-orange-400/70'}`} />}
+                        <span>{cont.name}</span>
+                      </div>
+                      {isSelected && (
+                        <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-black/30 text-black font-extrabold">Active</span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Direct Dark / Satellite Base Layer Toggle */}
-        <div className="flex items-center bg-slate-950/90 backdrop-blur-md p-1 rounded-lg border border-slate-800 shadow-xl text-xs font-mono flex-shrink-0">
+        <div className="flex items-center bg-black/75 backdrop-blur-xl p-1.5 rounded-xl border border-orange-500/20 shadow-xl text-xs font-mono flex-shrink-0">
           <button
             onClick={() => onUpdateGISConfig({ mapStyle: 'dark' })}
             title="Dark Tactical Mode"
-            className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded text-[10px] sm:text-[11px] transition-all cursor-pointer ${
-              gisConfig.mapStyle === 'dark'
-                ? 'bg-slate-800 text-orange-400 font-bold shadow-inner border border-slate-700'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
-            }`}
+            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] transition-all cursor-pointer ${gisConfig.mapStyle === 'dark'
+              ? 'bg-orange-500/20 text-orange-400 font-bold border border-orange-500/40 shadow-[0_0_12px_rgba(249,115,22,0.25)]'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+              }`}
           >
             <Moon className="w-3.5 h-3.5" />
             <span className="hidden xs:inline sm:inline">Dark</span>
@@ -548,11 +580,10 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
           <button
             onClick={() => onUpdateGISConfig({ mapStyle: 'satellite' })}
             title="High-Resolution Satellite Imagery"
-            className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded text-[10px] sm:text-[11px] transition-all cursor-pointer ${
-              gisConfig.mapStyle === 'satellite'
-                ? 'bg-emerald-950/70 text-emerald-400 font-bold shadow-inner border border-emerald-500/40'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
-            }`}
+            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] transition-all cursor-pointer ${gisConfig.mapStyle === 'satellite'
+              ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.25)]'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+              }`}
           >
             <Satellite className="w-3.5 h-3.5 text-emerald-400" />
             <span className="hidden xs:inline sm:inline">Satellite</span>
@@ -563,38 +594,37 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
         <div className="relative flex-shrink-0">
           <button
             onClick={() => setShowLayerMenu(!showLayerMenu)}
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-slate-950/90 backdrop-blur-md hover:bg-slate-900 border border-slate-800 rounded-lg text-[11px] sm:text-xs font-mono text-slate-300 shadow-xl transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-black/75 backdrop-blur-xl hover:bg-black/90 border border-orange-500/20 hover:border-orange-500/50 rounded-xl text-[11px] sm:text-xs font-mono text-slate-300 hover:text-orange-300 shadow-xl transition-all cursor-pointer hover:shadow-[0_0_15px_rgba(249,115,22,0.2)]"
           >
-            <Layers className="w-3.5 h-3.5 text-cyan-400" />
+            <Layers className="w-3.5 h-3.5 text-orange-400" />
             <span>GIS Overlays</span>
           </button>
 
           {showLayerMenu && (
-            <div className="absolute left-0 mt-2 w-64 max-w-[90vw] bg-slate-950/95 backdrop-blur-md border border-slate-800 rounded-xl p-3 shadow-2xl z-40 text-xs font-mono">
-              <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">
+            <div className="absolute left-0 mt-2 w-64 max-w-[90vw] bg-black/95 backdrop-blur-2xl border border-orange-500/30 rounded-2xl p-3.5 shadow-[0_12px_40px_rgba(0,0,0,0.9)] z-40 text-xs font-mono">
+              <div className="text-[10px] text-orange-400 font-bold uppercase tracking-wider mb-2">
                 Base Map Layer
               </div>
-              <div className="grid grid-cols-2 gap-1 mb-3">
+              <div className="grid grid-cols-2 gap-1.5 mb-3">
                 {(['dark', 'satellite', 'terrain', 'osm'] as const).map((style) => (
                   <button
                     key={style}
                     onClick={() => onUpdateGISConfig({ mapStyle: style })}
-                    className={`px-2 py-1 rounded text-center capitalize transition-colors cursor-pointer ${
-                      gisConfig.mapStyle === style
-                        ? 'bg-orange-500 text-white font-bold'
-                        : 'bg-slate-900 text-slate-400 hover:bg-slate-800'
-                    }`}
+                    className={`px-2.5 py-1.5 rounded-lg text-center capitalize transition-all cursor-pointer ${gisConfig.mapStyle === style
+                      ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-black font-bold shadow-[0_0_12px_rgba(249,115,22,0.4)]'
+                      : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
+                      }`}
                   >
                     {style}
                   </button>
                 ))}
               </div>
 
-              <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2 border-t border-slate-800 pt-2">
+              <div className="text-[10px] text-orange-400 font-bold uppercase tracking-wider mb-2 border-t border-white/10 pt-2.5">
                 Spatial Overlays
               </div>
 
-              <label className="flex items-center justify-between py-1 text-slate-300 cursor-pointer">
+              <label className="flex items-center justify-between py-1 text-slate-300 cursor-pointer hover:text-white">
                 <span className="flex items-center gap-1.5">
                   <Flame className="w-3.5 h-3.5 text-orange-400" /> FIRMS Thermal Anomaly
                 </span>
@@ -606,9 +636,9 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
                 />
               </label>
 
-              <label className="flex items-center justify-between py-1 text-slate-300 cursor-pointer">
+              <label className="flex items-center justify-between py-1 text-slate-300 cursor-pointer hover:text-white">
                 <span className="flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-cyan-400" /> Industrial Facilities
+                  <MapPin className="w-3.5 h-3.5 text-amber-400" /> Industrial Facilities
                 </span>
                 <input
                   type="checkbox"
@@ -618,7 +648,7 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
                 />
               </label>
 
-              <label className="flex items-center justify-between py-1 text-slate-300 cursor-pointer">
+              <label className="flex items-center justify-between py-1 text-slate-300 cursor-pointer hover:text-white">
                 <span className="flex items-center gap-1.5">
                   <ShieldAlert className="w-3.5 h-3.5 text-rose-400" /> Blast & Hazard Buffers
                 </span>
@@ -630,7 +660,7 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
                 />
               </label>
 
-              <label className="flex items-center justify-between py-1 text-slate-300 cursor-pointer">
+              <label className="flex items-center justify-between py-1 text-slate-300 cursor-pointer hover:text-white">
                 <span className="flex items-center gap-1.5">
                   <Wind className="w-3.5 h-3.5 text-sky-400" /> Wind Spread Vectors
                 </span>
@@ -641,43 +671,26 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
                   className="rounded accent-orange-500 cursor-pointer"
                 />
               </label>
-
-              {/* Min FRP Filter Slider */}
-              <div className="mt-2.5 pt-2 border-t border-slate-800">
-                <div className="flex justify-between text-[10px] text-slate-400 mb-1">
-                  <span>Min Fire Radiative Power:</span>
-                  <span className="text-orange-400 font-bold">{gisConfig.minFRPFilter} MW</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="200"
-                  step="10"
-                  value={gisConfig.minFRPFilter}
-                  onChange={(e) => onUpdateGISConfig({ minFRPFilter: Number(e.target.value) })}
-                  className="w-full accent-orange-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
-                />
-              </div>
             </div>
           )}
         </div>
 
         {/* India Tactical Sub-Bar (Visible when India is active or on-demand) */}
         {activeContinent === 'India' && (
-          <div 
+          <div
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
             onDoubleClick={(e) => e.stopPropagation()}
-            className="w-full flex items-center justify-between gap-2 p-1.5 px-2.5 rounded-lg bg-slate-950/95 backdrop-blur-md border border-orange-500/40 shadow-xl overflow-x-auto scrollbar-thin scrollbar-thumb-slate-800 animate-in fade-in slide-in-from-top-2 duration-200"
+            className="w-full flex items-center justify-between gap-2 p-1.5 px-3 rounded-xl bg-black/85 backdrop-blur-xl border border-orange-500/30 shadow-2xl overflow-x-auto no-scrollbar animate-in fade-in slide-in-from-top-2 duration-200"
           >
             <div className="flex items-center gap-1.5 flex-shrink-0">
               <span className="text-xs">🇮🇳</span>
-              <span className="text-[10px] sm:text-[11px] font-mono font-bold text-orange-400 whitespace-nowrap">
+              <span className="text-[10px] sm:text-[11px] font-mono font-bold text-orange-400 whitespace-nowrap glow-orange">
                 BHARAT SECTORS:
               </span>
             </div>
 
-            <div className="flex items-center gap-1 overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
               {[
                 { id: 'ALL', label: 'All India' },
                 { id: 'nuclear_plant', label: '☢️ Nuclear (NPCIL)' },
@@ -699,11 +712,10 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
                       e.preventDefault();
                       onUpdateGISConfig({ selectedFacilityType: sec.id });
                     }}
-                    className={`px-2.5 py-1 rounded text-[10px] font-mono font-medium whitespace-nowrap transition-colors cursor-pointer select-none ${
-                      isActive
-                        ? 'bg-orange-600 text-white font-bold ring-1 ring-orange-400 shadow-md'
-                        : 'bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800'
-                    }`}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-medium whitespace-nowrap transition-all cursor-pointer select-none ${isActive
+                      ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-black font-bold shadow-[0_0_12px_rgba(249,115,22,0.4)] border border-orange-300'
+                      : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:border-orange-500/40 hover:bg-orange-500/10'
+                      }`}
                   >
                     {sec.label}
                   </button>
@@ -719,9 +731,9 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
                   e.preventDefault();
                   onOpenIndiaCommand();
                 }}
-                className="flex items-center gap-1 px-2.5 py-1 rounded bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white text-[10px] font-mono font-bold whitespace-nowrap shadow-md hover:shadow-orange-950 transition-all cursor-pointer flex-shrink-0"
+                className="flex items-center gap-1 px-3 py-1 rounded-lg bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-black text-[10px] font-mono font-bold whitespace-nowrap shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all cursor-pointer flex-shrink-0"
               >
-                <span>🚨 NDRF / Command Hub</span>
+                <span>🚨 NDRF Hub</span>
               </button>
             )}
           </div>
@@ -730,11 +742,11 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
 
       {/* Floating Tactical Inspector Card (When Anomaly or Facility Selected) */}
       {(inspectedAnomaly || inspectedFacility) && (
-        <div className="absolute top-14 right-2.5 sm:right-3 left-2.5 sm:left-auto z-30 w-auto sm:w-96 max-w-full bg-slate-950/95 backdrop-blur-md border border-slate-800 rounded-2xl shadow-2xl p-3 sm:p-4 font-mono text-slate-100 flex flex-col max-h-[75%] sm:max-h-[80%] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-800">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+        <div className="absolute top-14 right-2.5 sm:right-3 left-2.5 sm:left-auto z-30 w-auto sm:w-96 max-w-full bg-black/90 backdrop-blur-2xl border border-orange-500/30 rounded-2xl shadow-[0_16px_50px_rgba(0,0,0,0.95)] p-3 sm:p-4 font-mono text-slate-100 flex flex-col max-h-[75%] sm:max-h-[80%] overflow-y-auto scrollbar-glass">
+          <div className="flex items-center justify-between pb-2 border-b border-orange-500/20">
             <div className="flex items-center gap-2">
               <Crosshair className="w-4 h-4 text-orange-400 animate-pulse" />
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-200">
+              <span className="text-xs font-bold uppercase tracking-wider text-orange-300 glow-orange">
                 Tactical Target Inspector
               </span>
             </div>
@@ -743,7 +755,7 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
                 onSelectAnomaly(null);
                 onSelectFacility(null);
               }}
-              className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-100 transition-colors cursor-pointer"
+              className="p-1 rounded-lg hover:bg-white/10 text-slate-400 hover:text-orange-400 transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -837,7 +849,7 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
 
                   <button
                     onClick={() => onOpenEvacAdvisor(inspectedAnomaly, inspectedFacility)}
-                    className="flex-1 bg-orange-600 hover:bg-orange-500 text-white font-bold py-2 px-3 rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-md shadow-orange-950/50 transition-all cursor-pointer min-h-[36px]"
+                    className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-black font-bold py-2 px-3 rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all cursor-pointer min-h-[36px]"
                   >
                     <BrainCircuit className="w-3.5 h-3.5" />
                     <span>AI Intel</span>
@@ -853,7 +865,7 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
                   const targetLon = inspectedAnomaly ? inspectedAnomaly.longitude : inspectedFacility!.longitude;
                   handleCopyCoords(targetLat, targetLon);
                 }}
-                className="flex-1 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 py-2 px-2 rounded-lg text-[10px] sm:text-[11px] flex items-center justify-center gap-1 transition-colors cursor-pointer min-h-[36px]"
+                className="flex-1 bg-black/60 hover:bg-black/90 text-slate-300 hover:text-orange-300 border border-orange-500/25 hover:border-orange-500/50 py-2 px-2 rounded-lg text-[10px] sm:text-[11px] flex items-center justify-center gap-1 transition-all cursor-pointer min-h-[36px]"
               >
                 {copiedCoords ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                 <span>{copiedCoords ? 'GPS Copied' : 'Copy GPS'}</span>
@@ -865,7 +877,7 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
                   const targetLon = inspectedAnomaly ? inspectedAnomaly.longitude : inspectedFacility!.longitude;
                   mapInstanceRef.current?.flyTo([targetLat, targetLon], 12, { duration: 1.0 });
                 }}
-                className="bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 p-2 rounded-lg text-[10px] flex items-center justify-center gap-1 transition-colors cursor-pointer min-h-[36px] min-w-[36px]"
+                className="bg-black/60 hover:bg-black/90 text-slate-300 hover:text-orange-300 border border-orange-500/25 hover:border-orange-500/50 p-2 rounded-lg text-[10px] flex items-center justify-center gap-1 transition-all cursor-pointer min-h-[36px] min-w-[36px]"
                 title="Zoom into blast boundary"
               >
                 <Maximize2 className="w-3.5 h-3.5" />
@@ -876,21 +888,21 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
       )}
 
       {/* Bottom Map Legend */}
-      <div className="absolute bottom-3 left-3 z-20 hidden md:flex items-center gap-3 bg-slate-950/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-800 text-[11px] font-mono text-slate-300 shadow-xl">
-        <div className="flex items-center gap-1">
-          <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+      <div className="absolute bottom-3 left-3 z-20 hidden md:flex items-center gap-3 bg-black/80 backdrop-blur-xl px-3.5 py-2 rounded-xl border border-orange-500/20 text-[11px] font-mono text-slate-300 shadow-[0_8px_32px_rgba(0,0,0,0.8)]">
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.6)]"></span>
           <span>Critical Blast Zone</span>
         </div>
-        <div className="flex items-center gap-1">
-          <span className="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.6)]"></span>
           <span>High Threat (1-5km)</span>
         </div>
-        <div className="flex items-center gap-1">
-          <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)]"></span>
           <span>Toxic Vapor Buffer</span>
         </div>
-        <div className="flex items-center gap-1">
-          <span className="w-3 h-0.5 bg-sky-400 border-dashed"></span>
+        <div className="flex items-center gap-1.5">
+          <span className="w-3.5 h-0.5 bg-sky-400 border-dashed"></span>
           <span>Wind Propagation</span>
         </div>
       </div>
