@@ -5,6 +5,7 @@
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: #030508;
     color: #f1f5f9;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   code, kbd, samp, pre {
@@ -12,13 +13,44 @@
   }
 }
 
-/* Glassmorphism & Cyber Black-Orange Tokens */
+/* =========================================================
+   THEME TOKENS: DARK (Black + Orange) vs LIGHT (White + Orange)
+   ========================================================= */
+
+/* Dark Mode Tokens (Default) */
+:root {
+  --theme-bg: #030508;
+  --theme-card: rgba(12, 17, 29, 0.45);
+  --theme-panel: rgba(6, 9, 15, 0.75);
+  --theme-border: rgba(249, 115, 22, 0.22);
+  --theme-text: #f1f5f9;
+  --theme-text-muted: #94a3b8;
+  --theme-orange: #f97316;
+}
+
+/* Light Mode Tokens (White + Orange) */
+html.light,
+html[data-theme="light"],
+body.light {
+  --theme-bg: #f8fafc;
+  --theme-card: rgba(255, 255, 255, 0.95);
+  --theme-panel: rgba(255, 255, 255, 0.96);
+  --theme-border: rgba(234, 88, 12, 0.25);
+  --theme-text: #0f172a;
+  --theme-text-muted: #475569;
+  --theme-orange: #ea580c;
+}
+
+/* =========================================================
+   GLASSMORPHISM & CYBER BLACK-ORANGE (DARK)
+   ========================================================= */
 .glass-panel {
-  background: rgba(6, 9, 15, 0.75);
+  background: rgba(6, 9, 15, 0.8);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(249, 115, 22, 0.18);
+  border: 1px solid rgba(249, 115, 22, 0.22);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .glass-panel-subtle {
@@ -30,17 +62,17 @@
 }
 
 .glass-card {
-  background: rgba(12, 17, 29, 0.45);
+  background: rgba(12, 17, 29, 0.55);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(249, 115, 22, 0.12);
+  border: 1px solid rgba(249, 115, 22, 0.16);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  background: rgba(18, 24, 38, 0.65);
-  border-color: rgba(249, 115, 22, 0.38);
-  box-shadow: 0 0 20px -3px rgba(249, 115, 22, 0.2);
+  background: rgba(18, 24, 38, 0.75);
+  border-color: rgba(249, 115, 22, 0.45);
+  box-shadow: 0 0 20px -3px rgba(249, 115, 22, 0.25);
 }
 
 .glass-button {
@@ -70,7 +102,7 @@
   box-shadow: 0 0 12px -2px rgba(249, 115, 22, 0.18);
 }
 
-/* Ambient Radial Orange Lighting in Background */
+/* Ambient Radial Orange Lighting in Background (Dark) */
 .bg-ambient-glow {
   background-image: 
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(249, 115, 22, 0.12), transparent),
@@ -78,7 +110,384 @@
     radial-gradient(ellipse 50% 30% at 10% 90%, rgba(249, 115, 22, 0.04), transparent);
 }
 
-/* Scrollbar elimination utilities */
+/* =========================================================
+   LIGHT THEME: WHITE WITH ORANGE
+   ========================================================= */
+html.light body,
+html[data-theme="light"] body,
+body.light {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Ambient glow in Light Mode */
+html.light .bg-ambient-glow,
+html[data-theme="light"] .bg-ambient-glow,
+.light .bg-ambient-glow {
+  background-color: #f8fafc !important;
+  background-image: 
+    radial-gradient(ellipse 80% 45% at 50% -10%, rgba(249, 115, 22, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 92% 15%, rgba(234, 88, 12, 0.07), transparent),
+    radial-gradient(ellipse 50% 35% at 8% 85%, rgba(249, 115, 22, 0.05), transparent) !important;
+}
+
+/* Light Theme Header */
+html.light header,
+html[data-theme="light"] header,
+.light header {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+  border-bottom-color: rgba(234, 88, 12, 0.25) !important;
+  box-shadow: 0 4px 25px rgba(234, 88, 12, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Light Theme Glass Panels */
+html.light .glass-panel,
+html[data-theme="light"] .glass-panel,
+.light .glass-panel {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(234, 88, 12, 0.25) !important;
+  box-shadow: 0 10px 30px -4px rgba(234, 88, 12, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  color: #0f172a !important;
+}
+
+html.light .glass-panel-subtle,
+html[data-theme="light"] .glass-panel-subtle,
+.light .glass-panel-subtle {
+  background: rgba(248, 250, 252, 0.9) !important;
+  border-color: rgba(234, 88, 12, 0.18) !important;
+  box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Light Theme Cards */
+html.light .glass-card,
+html[data-theme="light"] .glass-card,
+.light .glass-card {
+  background: #ffffff !important;
+  border-color: rgba(234, 88, 12, 0.2) !important;
+  box-shadow: 0 2px 10px rgba(234, 88, 12, 0.04), 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+  color: #0f172a !important;
+}
+
+html.light .glass-card:hover,
+html[data-theme="light"] .glass-card:hover,
+.light .glass-card:hover {
+  background: #fff7ed !important;
+  border-color: rgba(234, 88, 12, 0.5) !important;
+  box-shadow: 0 8px 25px -4px rgba(234, 88, 12, 0.18) !important;
+}
+
+/* Light Theme Buttons */
+html.light .glass-button,
+html[data-theme="light"] .glass-button,
+.light .glass-button {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(234, 88, 12, 0.24) !important;
+  color: #0f172a !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light .glass-button:hover,
+html[data-theme="light"] .glass-button:hover,
+.light .glass-button:hover {
+  background: rgba(255, 237, 213, 0.9) !important;
+  border-color: rgba(234, 88, 12, 0.6) !important;
+  color: #c2410c !important;
+  box-shadow: 0 0 15px rgba(234, 88, 12, 0.2) !important;
+}
+
+/* Light Mode Background Overrides for common translucent dark boxes */
+html.light .bg-black\/75,
+html.light .bg-black\/70,
+html.light .bg-black\/80,
+html.light .bg-black\/85,
+html.light .bg-black\/90,
+html.light .bg-black\/95,
+html.light .bg-black\/60,
+html.light .bg-black\/50,
+html.light .bg-black\/40,
+html.light .bg-black\/30 {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+}
+
+html.light .bg-slate-950,
+html.light .bg-slate-900,
+html.light .bg-slate-900\/95,
+html.light .bg-slate-900\/90,
+html.light .bg-slate-900\/80,
+html.light .bg-slate-900\/70,
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/50,
+html.light .bg-slate-950\/90,
+html.light .bg-slate-950\/80,
+html.light .bg-slate-950\/60 {
+  background-color: #ffffff !important;
+}
+
+html.light .bg-slate-800,
+html.light .bg-slate-800\/80,
+html.light .bg-slate-800\/60 {
+  background-color: #f1f5f9 !important;
+}
+
+/* Light Mode Border Overrides */
+html.light .border-white\/10,
+html.light .border-white\/5,
+html.light .border-white\/20,
+html.light .border-slate-800,
+html.light .border-slate-800\/80,
+html.light .border-slate-700 {
+  border-color: rgba(234, 88, 12, 0.18) !important;
+}
+
+/* =========================================================
+   LIGHT THEME HIGH-CONTRAST TEXT & VISIBILITY ENGINE
+   ========================================================= */
+
+/* All primary text in Light Theme */
+html.light,
+html.light body,
+html[data-theme="light"],
+html[data-theme="light"] body {
+  color: #0f172a !important;
+}
+
+/* Eliminate faint/washed-out text in Light Theme */
+html.light .text-white,
+html.light .text-slate-100,
+html.light .text-slate-200,
+html.light .text-slate-300 {
+  color: #0f172a !important;
+}
+
+html.light .text-slate-400,
+html.light .text-slate-500,
+html.light .text-slate-600 {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+html.light p,
+html.light span,
+html.light div,
+html.light label {
+  text-shadow: none !important;
+}
+
+/* Turn neon low-contrast colors into rich, dark, high-contrast tones on white */
+html.light .text-orange-400,
+html.light .text-orange-300 {
+  color: #c2410c !important; /* Rich Burnt Orange */
+  font-weight: 700 !important;
+}
+
+html.light .text-amber-400,
+html.light .text-amber-300,
+html.light .text-yellow-400,
+html.light .text-yellow-300 {
+  color: #b45309 !important; /* Deep Amber */
+  font-weight: 700 !important;
+}
+
+html.light .text-rose-400,
+html.light .text-rose-300,
+html.light .text-red-400,
+html.light .text-red-300 {
+  color: #be123c !important; /* Deep Crimson */
+  font-weight: 700 !important;
+}
+
+html.light .text-blue-400,
+html.light .text-blue-300,
+html.light .text-cyan-400 {
+  color: #1d4ed8 !important; /* Royal Cobalt Blue */
+  font-weight: 700 !important;
+}
+
+html.light .text-emerald-400,
+html.light .text-emerald-300 {
+  color: #047857 !important; /* Deep Emerald */
+  font-weight: 700 !important;
+}
+
+/* Remove glowing text shadow in light mode so text is sharp and clear */
+html.light .glow-orange {
+  text-shadow: none !important;
+  color: #c2410c !important;
+  font-weight: 800 !important;
+}
+
+/* Header Telemetry Pills in Light Mode */
+html.light header .bg-black\/50,
+html.light header .bg-black\/60 {
+  background-color: #ffffff !important;
+  border-color: rgba(234, 88, 12, 0.28) !important;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light header .bg-rose-950\/30 {
+  background-color: #fff1f2 !important;
+  border-color: #f43f5e !important;
+}
+
+html.light header .bg-amber-950\/20 {
+  background-color: #fffbeb !important;
+  border-color: #f59e0b !important;
+}
+
+/* Dedicated India Hub Button Light Mode Styling */
+html.light .india-hub-btn {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffffff 50%, #f0fdf4 100%) !important;
+  border: 1.5px solid #ea580c !important;
+  color: #0f172a !important;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.16) !important;
+}
+
+html.light .india-hub-btn:hover {
+  background: linear-gradient(135deg, #ffedd5 0%, #ffffff 50%, #dcfce7 100%) !important;
+  border-color: #c2410c !important;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.25) !important;
+}
+
+html.light .india-hub-btn span {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+/* Live Incident Feed & Threat Rows in Light Mode */
+html.light .divide-white\/5 > * {
+  border-color: rgba(234, 88, 12, 0.16) !important;
+}
+
+html.light .divide-white\/5 > *:hover {
+  background-color: #fff7ed !important;
+}
+
+/* Badges & Severity Chips in Light Mode */
+html.light .bg-rose-950\/40,
+html.light .bg-rose-950\/60 {
+  background-color: #ffe4e6 !important;
+  color: #9f1239 !important;
+  border: 1px solid #f43f5e !important;
+  font-weight: 800 !important;
+}
+
+html.light .bg-orange-950\/40,
+html.light .bg-orange-950\/60 {
+  background-color: #ffedd5 !important;
+  color: #9a3412 !important;
+  border: 1px solid #ea580c !important;
+  font-weight: 800 !important;
+}
+
+html.light .bg-amber-950\/40,
+html.light .bg-amber-950\/60 {
+  background-color: #fef3c7 !important;
+  color: #92400e !important;
+  border: 1px solid #f59e0b !important;
+  font-weight: 800 !important;
+}
+
+/* Telemetry Box (Distance, FRP, ETA, Wind) in Threat Matrix */
+html.light .bg-black\/70 {
+  background-color: #f8fafc !important;
+  border-color: rgba(234, 88, 12, 0.3) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Risk Score Circle in Threat Matrix */
+html.light .w-10.h-10.rounded-xl,
+html.light .w-11.h-11.rounded-xl {
+  background-color: #fff1f2 !important;
+  border-color: #f43f5e !important;
+  color: #9f1239 !important;
+}
+
+/* Recharts Axis Ticks in Light Mode */
+html.light text,
+html.light .recharts-text,
+html.light .recharts-cartesian-axis-tick-value {
+  fill: #0f172a !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+}
+
+html.light .recharts-cartesian-grid line {
+  stroke: rgba(234, 88, 12, 0.15) !important;
+}
+
+/* Search Bar in Light Mode */
+html.light input[type="text"] {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: rgba(234, 88, 12, 0.4) !important;
+  font-weight: 600 !important;
+}
+
+html.light input[type="text"]::placeholder {
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
+/* Maintain crisp dark text on solid orange/amber gradient buttons */
+html.light .text-black,
+html.light [class*="from-orange-500"] .text-black,
+html.light [class*="bg-gradient-to-r"] .text-black {
+  color: #000000 !important;
+}
+
+/* Maintain white text on emergency red/rose buttons */
+html.light [class*="from-rose-600"] span,
+html.light [class*="bg-rose-600"] span,
+html.light [class*="bg-rose-600"],
+html.light [class*="from-rose-600"] {
+  color: #ffffff !important;
+}
+
+/* Light Form Inputs & Selects */
+html.light input,
+html.light select,
+html.light textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: rgba(234, 88, 12, 0.35) !important;
+}
+
+html.light select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Light Leaflet Container & Popups */
+html.light .leaflet-container {
+  background-color: #e2e8f0 !important;
+}
+
+html.light .custom-leaflet-popup .leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(234, 88, 12, 0.4) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 16px 36px -4px rgba(234, 88, 12, 0.16), 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  padding: 0 !important;
+}
+
+html.light .custom-leaflet-popup .leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 1px solid rgba(234, 88, 12, 0.4) !important;
+}
+
+html.light .leaflet-dark-tooltip {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(234, 88, 12, 0.35) !important;
+  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.12) !important;
+}
+
+html.light .leaflet-dark-tooltip::before {
+  border-top-color: rgba(255, 255, 255, 0.96) !important;
+}
+
+/* Custom Scrollbars */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -87,7 +496,6 @@
   scrollbar-width: none;
 }
 
-/* Custom sleek slim scrollbar for data feeds */
 .scrollbar-glass::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -103,7 +511,17 @@
   background: rgba(249, 115, 22, 0.5);
 }
 
-/* Leaflet Tactical Dark & Glassy Overrides */
+html.light .scrollbar-glass::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+html.light .scrollbar-glass::-webkit-scrollbar-thumb {
+  background: rgba(234, 88, 12, 0.35) !important;
+}
+html.light .scrollbar-glass::-webkit-scrollbar-thumb:hover {
+  background: rgba(234, 88, 12, 0.6) !important;
+}
+
+/* Leaflet Tactical Dark Overrides */
 .leaflet-container {
   background-color: #030508 !important;
   font-family: inherit;

@@ -129,6 +129,11 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
       tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
       maxNativeZoom = 16;
       maxZoom = 19;
+    } else if (gisConfig.mapStyle === 'light') {
+      // ESRI Light Gray Canvas (Crisp white/light aesthetic with orange markers)
+      tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+      maxNativeZoom = 16;
+      maxZoom = 19;
     } else if (gisConfig.mapStyle === 'satellite') {
       // ESRI World Imagery (High resolution satellite)
       tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
@@ -606,7 +611,7 @@ export const InteractiveThermalMap: React.FC<InteractiveThermalMapProps> = ({
                 Base Map Layer
               </div>
               <div className="grid grid-cols-2 gap-1.5 mb-3">
-                {(['dark', 'satellite', 'terrain', 'osm'] as const).map((style) => (
+                {(['dark', 'light', 'satellite', 'terrain', 'osm'] as const).map((style) => (
                   <button
                     key={style}
                     onClick={() => onUpdateGISConfig({ mapStyle: style })}

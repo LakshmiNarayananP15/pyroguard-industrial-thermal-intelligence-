@@ -89,8 +89,10 @@ export interface NotificationThresholds {
   repeatAlertIntervalMinutes: number;
 }
 
+export type AppTheme = 'dark' | 'light';
+
 export interface GISLayerConfig {
-  mapStyle: 'dark' | 'satellite' | 'terrain' | 'osm';
+  mapStyle: 'dark' | 'light' | 'satellite' | 'terrain' | 'osm';
   showThermalOverlay: boolean;
   showFacilityMarkers: boolean;
   showBlastZones: boolean;

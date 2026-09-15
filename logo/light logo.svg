@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Brand Gradients -->
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FF9100" />
+      <stop offset="100%" stop-color="#DD2C00" />
+    </linearGradient>
+
+    <linearGradient id="flameGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#FF3D00" />
+      <stop offset="50%" stop-color="#FF9100" />
+      <stop offset="100%" stop-color="#FFEA00" />
+    </linearGradient>
+
+    <!-- Glow Filters -->
+    <filter id="orangeGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="subtleGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Light Theme Background (Can be removed if you need a transparent background) -->
+  <rect width="500" height="500" fill="#F8F9FA" rx="20"/>
+
+  <!-- Centering and Scaling Group -->
+  <!-- Enlarged by 35% and re-centered vertically to fill the 500x500 canvas -->
+  <g transform="translate(250, 250) scale(1.35) translate(-250, -190)">
+    
+    <!-- ================= THE GUARD (SHIELD) ================= -->
+    <g filter="url(#subtleGlow)">
+      <path d="M 250 40 L 360 90 L 360 220 C 360 280 250 340 250 340 C 250 340 140 280 140 220 L 140 90 Z" 
+            fill="none" stroke="url(#shieldGrad)" stroke-width="4" opacity="0.8"/>
+      <!-- Inner Shield Echo -->
+      <path d="M 250 55 L 345 100 L 345 215 C 345 270 250 325 250 325 C 250 325 155 270 155 215 L 155 100 Z" 
+            fill="none" stroke="#FF9100" stroke-width="1.5" opacity="0.4"/>
+    </g>
+
+    <!-- ================= NASA FIRMS (ORBIT & RADAR) ================= -->
+    <g transform="translate(250, 210)">
+      <!-- Radar Rings -->
+      <circle cx="0" cy="0" r="70" fill="none" stroke="#FF9100" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.5"/>
+      <circle cx="0" cy="0" r="40" fill="none" stroke="#FF9100" stroke-width="1.5" opacity="0.3"/>
+      
+      <!-- Satellite Orbit -->
+      <g transform="rotate(-25)">
+        <ellipse cx="0" cy="0" rx="140" ry="45" fill="none" stroke="#FFB74D" stroke-width="2" stroke-dasharray="10 5" opacity="0.7" filter="url(#subtleGlow)"/>
+        <!-- Satellite Node -->
+        <circle cx="-140" cy="0" r="4" fill="#FFEA00" filter="url(#orangeGlow)"/>
+        <path d="M -148 -6 L -132 6 M -148 6 L -132 -6" stroke="#FFEA00" stroke-width="2" opacity="0.9"/>
+      </g>
+    </g>
+
+    <!-- ================= THE AI FLAME ================= -->
+    <g filter="url(#orangeGlow)">
+      <!-- Base Flame Shape -->
+      <path d="M 250 100 C 290 150 315 180 315 230 C 315 270 285 300 250 300 C 215 300 185 270 185 230 C 185 180 210 150 250 100 Z" 
+            fill="url(#flameGrad)" opacity="0.95"/>
+    </g>
+
+    <!-- ================= AI REASONING (DATA CORE) ================= -->
+    <g>
+      <!-- Inner Cutout (Updated to match the light theme background) -->
+      <path d="M 250 150 C 275 190 285 210 285 240 C 285 260 270 275 250 275 C 230 275 215 260 215 240 C 215 210 225 190 250 150 Z" 
+            fill="#F8F9FA" opacity="0.95"/>
+      
+      <!-- Cybernetic Circuit Paths inside the flame -->
+      <g stroke="#FF9100" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#subtleGlow)">
+        <!-- Main Stem -->
+        <path d="M 250 275 L 250 210" />
+        <!-- Left Circuit -->
+        <path d="M 250 250 L 225 225 L 225 195" />
+        <path d="M 235 215 L 235 180" />
+        <!-- Right Circuit -->
+        <path d="M 250 230 L 275 205 L 275 185" />
+      </g>
+
+      <!-- Glowing Nodes -->
+      <g fill="#FF3D00" filter="url(#subtleGlow)">
+        <circle cx="250" cy="210" r="3.5" fill="#FFEA00" />
+        <circle cx="225" cy="195" r="3" />
+        <circle cx="235" cy="180" r="2.5" />
+        <circle cx="275" cy="185" r="3" />
+        <circle cx="250" cy="275" r="4" />
+      </g>
+    </g>
+  </g>
+</svg>

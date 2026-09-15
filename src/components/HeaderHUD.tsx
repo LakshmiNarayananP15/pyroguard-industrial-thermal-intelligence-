@@ -14,11 +14,15 @@ import {
   Search,
   Satellite,
   RefreshCw,
-  X
+  X,
+  Sun,
+  Moon
 } from 'lucide-react';
-import { ThermalAnomaly, EmergencyAlert, FIRMSFeedStatus } from '../types';
+import { ThermalAnomaly, EmergencyAlert, FIRMSFeedStatus, AppTheme } from '../types';
 
 interface HeaderHUDProps {
+  theme: AppTheme;
+  onToggleTheme: () => void;
   anomalies: ThermalAnomaly[];
   alerts: EmergencyAlert[];
   firmsStatus?: FIRMSFeedStatus | null;
@@ -38,6 +42,8 @@ interface HeaderHUDProps {
 }
 
 export const HeaderHUD: React.FC<HeaderHUDProps> = ({
+  theme,
+  onToggleTheme,
   anomalies,
   alerts,
   firmsStatus,
@@ -70,16 +76,29 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
         {/* Brand & System Status */}
         <div className="flex items-center gap-2 sm:gap-3 w-full xl:w-auto justify-between">
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-orange-500 via-amber-500 to-orange-600 flex items-center justify-center shadow-[0_0_20px_rgba(249,115,22,0.45)] border border-orange-400/40 flex-shrink-0">
-              <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-black drop-shadow animate-pulse" />
-            </div>
+            {/* Clickable Logo Toggle */}
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              title={theme === 'dark' ? 'Dark Theme (Black with Orange). Click logo to switch to Light Theme' : 'Light Theme (White with Orange). Click logo to switch to Dark Theme'}
+              className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(249,115,22,0.4)] border border-orange-500/40 flex-shrink-0 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+            >
+              <img
+                key={theme}
+                src={theme === 'dark' ? '/logo/dark-logo.svg' : '/logo/light-logo.svg'}
+                alt={theme === 'dark' ? 'PyroGuard Dark Logo' : 'PyroGuard Light Logo'}
+                className="w-full h-full object-cover transition-transform duration-500 hover:rotate-6"
+              />
+            </button>
+
+            {/* Brand Title */}
             <div>
               <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="font-extrabold text-sm sm:text-base tracking-wider text-white uppercase font-mono">
-                  PYRO<span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300 glow-orange">GUARD</span>
+                <span className={`font-extrabold text-sm sm:text-base tracking-wider uppercase font-mono ${theme === 'light' ? 'text-slate-950' : 'text-white'}`}>
+                  PYRO<span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-400 glow-orange">GUARD</span>
                 </span>
               </div>
-              <p className="text-[10px] sm:text-[11px] text-slate-400 hidden md:block font-mono">
+              <p className={`text-[10px] sm:text-[11px] hidden md:block font-mono ${theme === 'light' ? 'text-slate-700 font-bold' : 'text-slate-400'}`}>
                 Industrial Fire Early-Warning Engine
               </p>
             </div>
@@ -90,15 +109,19 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
             <div
               onClick={onOpenThresholds}
               title="Click to view NASA FIRMS Satellite Feed configuration"
-              className="cursor-pointer flex items-center gap-1.5 px-2 sm:px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-md border border-emerald-500/40 text-[10px] sm:text-[11px] font-mono text-emerald-400 hover:bg-emerald-950/40 hover:border-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.15)] transition-all"
+              className={`cursor-pointer flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-md border text-[10px] sm:text-[11px] font-mono shadow-[0_0_12px_rgba(16,185,129,0.15)] transition-all ${
+                theme === 'light'
+                  ? 'bg-emerald-50 border-emerald-400 text-emerald-800 hover:bg-emerald-100 font-bold'
+                  : 'bg-black/60 backdrop-blur-md border-emerald-500/40 text-emerald-400 hover:bg-emerald-950/40 hover:border-emerald-400'
+              }`}
             >
-              <Satellite className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 flex-shrink-0" />
+              <Satellite className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-500 flex-shrink-0" />
               <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-emerald-500"></span>
               </span>
-              <span className="hidden sm:inline text-slate-400">NASA FIRMS:</span>
-              <span className="font-bold text-emerald-300">
+              <span className={theme === 'light' ? 'hidden sm:inline text-slate-700 font-bold' : 'hidden sm:inline text-slate-400'}>NASA FIRMS:</span>
+              <span className={theme === 'light' ? 'font-black text-emerald-800' : 'font-bold text-emerald-300'}>
                 {firmsStatus?.isRealData ? 'LIVE' : 'SYNCED'}
               </span>
             </div>
@@ -108,9 +131,13 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
                 onClick={onRefreshSatellites}
                 disabled={isRefreshingSatellites}
                 title="Scan latest NASA FIRMS satellite passes"
-                className="p-1 sm:p-1.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 text-slate-400 hover:text-orange-400 hover:border-orange-500/40 transition-all disabled:opacity-50 cursor-pointer min-h-[32px] min-w-[32px] flex items-center justify-center hover:shadow-[0_0_12px_rgba(249,115,22,0.25)]"
+                className={`p-1 sm:p-1.5 rounded-md border transition-all disabled:opacity-50 cursor-pointer min-h-[32px] min-w-[32px] flex items-center justify-center ${
+                  theme === 'light'
+                    ? 'bg-white border-orange-300 text-slate-700 hover:text-orange-600 hover:border-orange-500 shadow-sm'
+                    : 'bg-black/60 backdrop-blur-md border-white/10 text-slate-400 hover:text-orange-400 hover:border-orange-500/40 hover:shadow-[0_0_12px_rgba(249,115,22,0.25)]'
+                }`}
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshingSatellites ? 'animate-spin text-orange-400' : ''}`} />
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshingSatellites ? 'animate-spin text-orange-500' : ''}`} />
               </button>
             )}
           </div>
@@ -122,16 +149,19 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
           {/* Critical Red Zone Breaches */}
           <div
             onClick={() => onSeverityChange(selectedSeverity === 'CRITICAL' ? 'ALL' : 'CRITICAL')}
-            className={`cursor-pointer px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border backdrop-blur-md transition-all flex items-center gap-1.5 sm:gap-2 flex-shrink-0 ${criticalThreats.length > 0
-                ? 'bg-rose-950/30 border-rose-500/40 text-rose-300 hover:bg-rose-900/40 hover:border-rose-400 hover:shadow-[0_0_18px_rgba(244,63,94,0.3)]'
-                : 'bg-black/50 border-white/10 text-slate-400'
-              }`}
+            className={`cursor-pointer px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border backdrop-blur-md transition-all flex items-center gap-1.5 sm:gap-2 flex-shrink-0 ${
+              theme === 'light'
+                ? 'bg-rose-50 border-rose-300 text-slate-900 hover:bg-rose-100 shadow-sm'
+                : (criticalThreats.length > 0
+                  ? 'bg-rose-950/30 border-rose-500/40 text-rose-300 hover:bg-rose-900/40 hover:border-rose-400 hover:shadow-[0_0_18px_rgba(244,63,94,0.3)]'
+                  : 'bg-black/50 border-white/10 text-slate-400')
+            }`}
           >
-            <ShieldAlert className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-400 flex-shrink-0" />
+            <ShieldAlert className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-500 flex-shrink-0" />
             <div>
-              <div className="text-[9px] sm:text-[10px] uppercase font-mono text-slate-400 leading-tight whitespace-nowrap">Red Zone</div>
-              <div className="text-xs sm:text-sm font-bold font-mono text-rose-400 leading-tight whitespace-nowrap">
-                {criticalThreats.length} <span className="text-[9px] sm:text-[10px] font-normal text-slate-400">sites</span>
+              <div className={`text-[9px] sm:text-[10px] uppercase font-mono leading-tight whitespace-nowrap ${theme === 'light' ? 'text-slate-800 font-bold' : 'text-slate-400'}`}>Red Zone</div>
+              <div className={`text-xs sm:text-sm font-black font-mono leading-tight whitespace-nowrap ${theme === 'light' ? 'text-rose-700' : 'text-rose-400'}`}>
+                {criticalThreats.length} <span className={`text-[9px] sm:text-[10px] ${theme === 'light' ? 'text-slate-700 font-semibold' : 'text-slate-400'}`}>sites</span>
               </div>
             </div>
           </div>
@@ -139,35 +169,47 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
           {/* High Warning Sites */}
           <div
             onClick={() => onSeverityChange(selectedSeverity === 'HIGH' ? 'ALL' : 'HIGH')}
-            className="cursor-pointer px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-black/50 backdrop-blur-md border border-amber-500/30 text-slate-300 hover:border-amber-400/70 hover:bg-amber-950/20 hover:shadow-[0_0_16px_rgba(245,158,11,0.25)] transition-all flex items-center gap-1.5 sm:gap-2 flex-shrink-0"
+            className={`cursor-pointer px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border backdrop-blur-md transition-all flex items-center gap-1.5 sm:gap-2 flex-shrink-0 ${
+              theme === 'light'
+                ? 'bg-amber-50 border-amber-300 text-slate-900 hover:bg-amber-100 shadow-sm'
+                : 'bg-black/50 border-amber-500/30 text-slate-300 hover:border-amber-400/70 hover:bg-amber-950/20 hover:shadow-[0_0_16px_rgba(245,158,11,0.25)]'
+            }`}
           >
-            <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 flex-shrink-0" />
+            <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 flex-shrink-0" />
             <div>
-              <div className="text-[9px] sm:text-[10px] uppercase font-mono text-slate-400 leading-tight whitespace-nowrap">High Risk</div>
-              <div className="text-xs sm:text-sm font-bold font-mono text-amber-400 leading-tight whitespace-nowrap">
-                {highThreats.length} <span className="text-[9px] sm:text-[10px] font-normal text-slate-400">sites</span>
+              <div className={`text-[9px] sm:text-[10px] uppercase font-mono leading-tight whitespace-nowrap ${theme === 'light' ? 'text-slate-800 font-bold' : 'text-slate-400'}`}>High Risk</div>
+              <div className={`text-xs sm:text-sm font-black font-mono leading-tight whitespace-nowrap ${theme === 'light' ? 'text-amber-800' : 'text-amber-400'}`}>
+                {highThreats.length} <span className={`text-[9px] sm:text-[10px] ${theme === 'light' ? 'text-slate-700 font-semibold' : 'text-slate-400'}`}>sites</span>
               </div>
             </div>
           </div>
 
           {/* Total Cumulative FRP */}
-          <div className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-black/50 backdrop-blur-md border border-orange-500/30 text-slate-300 flex items-center gap-1.5 sm:gap-2 flex-shrink-0 shadow-[0_0_15px_rgba(249,115,22,0.12)]">
-            <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-400 flex-shrink-0" />
+          <div className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border backdrop-blur-md flex items-center gap-1.5 sm:gap-2 flex-shrink-0 ${
+            theme === 'light'
+              ? 'bg-orange-50 border-orange-300 text-slate-900 shadow-sm'
+              : 'bg-black/50 border-orange-500/30 text-slate-300 shadow-[0_0_15px_rgba(249,115,22,0.12)]'
+          }`}>
+            <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-500 flex-shrink-0" />
             <div>
-              <div className="text-[9px] sm:text-[10px] uppercase font-mono text-slate-400 leading-tight whitespace-nowrap">Total Power</div>
-              <div className="text-xs sm:text-sm font-bold font-mono text-orange-400 leading-tight whitespace-nowrap">
-                {totalFRP.toLocaleString()} <span className="text-[9px] sm:text-[10px] font-normal text-slate-400">MW</span>
+              <div className={`text-[9px] sm:text-[10px] uppercase font-mono leading-tight whitespace-nowrap ${theme === 'light' ? 'text-slate-800 font-bold' : 'text-slate-400'}`}>Total Power</div>
+              <div className={`text-xs sm:text-sm font-black font-mono leading-tight whitespace-nowrap ${theme === 'light' ? 'text-orange-700' : 'text-orange-400'}`}>
+                {totalFRP.toLocaleString()} <span className={`text-[9px] sm:text-[10px] ${theme === 'light' ? 'text-slate-700 font-semibold' : 'text-slate-400'}`}>MW</span>
               </div>
             </div>
           </div>
 
           {/* Active Responders Dispatched */}
-          <div className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-black/50 backdrop-blur-md border border-blue-500/30 text-slate-300 flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-            <Radio className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 flex-shrink-0" />
+          <div className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border backdrop-blur-md flex items-center gap-1.5 sm:gap-2 flex-shrink-0 ${
+            theme === 'light'
+              ? 'bg-blue-50 border-blue-300 text-slate-900 shadow-sm'
+              : 'bg-black/50 border-blue-500/30 text-slate-300'
+          }`}>
+            <Radio className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500 flex-shrink-0" />
             <div>
-              <div className="text-[9px] sm:text-[10px] uppercase font-mono text-slate-400 leading-tight whitespace-nowrap">Dispatches</div>
-              <div className="text-xs sm:text-sm font-bold font-mono text-blue-400 leading-tight whitespace-nowrap">
-                {activeDispatches} <span className="text-[9px] sm:text-[10px] font-normal text-slate-400">units</span>
+              <div className={`text-[9px] sm:text-[10px] uppercase font-mono leading-tight whitespace-nowrap ${theme === 'light' ? 'text-slate-800 font-bold' : 'text-slate-400'}`}>Dispatches</div>
+              <div className={`text-xs sm:text-sm font-black font-mono leading-tight whitespace-nowrap ${theme === 'light' ? 'text-blue-800' : 'text-blue-400'}`}>
+                {activeDispatches} <span className={`text-[9px] sm:text-[10px] ${theme === 'light' ? 'text-slate-700 font-semibold' : 'text-slate-400'}`}>units</span>
               </div>
             </div>
           </div>
@@ -178,13 +220,17 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
 
           {/* Quick Search */}
           <div className="relative flex-1 sm:w-44 lg:w-48 min-w-[140px]">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-orange-400/70 pointer-events-none" />
+            <Search className={`w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none ${theme === 'light' ? 'text-orange-600' : 'text-orange-400/70'}`} />
             <input
               type="text"
               placeholder="Search facility..."
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full bg-black/60 backdrop-blur-md border border-orange-500/25 rounded-lg pl-8 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-orange-400 focus:shadow-[0_0_15px_rgba(249,115,22,0.3)] transition-all font-mono"
+              className={`w-full rounded-lg pl-8 pr-7 py-1.5 text-xs focus:outline-none transition-all font-mono ${
+                theme === 'light'
+                  ? 'bg-white border border-orange-400 text-slate-900 placeholder-slate-500 font-semibold focus:border-orange-500 focus:ring-1 focus:ring-orange-500 shadow-sm'
+                  : 'bg-black/60 backdrop-blur-md border border-orange-500/25 text-slate-200 placeholder-slate-500 focus:border-orange-400 focus:shadow-[0_0_15px_rgba(249,115,22,0.3)]'
+              }`}
             />
             {searchTerm && (
               <button
@@ -201,10 +247,15 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
             <button
               onClick={onToggleSound}
               title={soundEnabled ? 'Acoustic Siren Enabled' : 'Acoustic Siren Muted'}
-              className={`p-1.5 sm:p-2 rounded-lg border backdrop-blur-md transition-all min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer ${soundEnabled
-                  ? 'bg-orange-500/15 border-orange-500/40 text-orange-400 hover:bg-orange-500/25 shadow-[0_0_12px_rgba(249,115,22,0.25)]'
-                  : 'bg-black/50 border-white/10 text-slate-500 hover:text-slate-300'
-                }`}
+              className={`p-1.5 sm:p-2 rounded-lg border backdrop-blur-md transition-all min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer ${
+                theme === 'light'
+                  ? (soundEnabled
+                    ? 'bg-orange-100 border-orange-400 text-orange-700 hover:bg-orange-200 shadow-sm'
+                    : 'bg-white border-slate-300 text-slate-600 hover:text-slate-900 shadow-sm')
+                  : (soundEnabled
+                    ? 'bg-orange-500/15 border-orange-500/40 text-orange-400 hover:bg-orange-500/25 shadow-[0_0_12px_rgba(249,115,22,0.25)]'
+                    : 'bg-black/50 border-white/10 text-slate-500 hover:text-slate-300')
+              }`}
             >
               {soundEnabled ? <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
             </button>
@@ -214,10 +265,14 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
               <button
                 onClick={onOpenIndiaCommand}
                 title="India Bharat Industrial Safety & NDRF Hub"
-                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-gradient-to-r from-orange-500/20 via-black/70 to-emerald-500/20 border border-orange-500/40 hover:border-orange-400 text-orange-300 hover:text-white text-xs font-mono font-bold shadow-[0_0_15px_rgba(249,115,22,0.2)] hover:shadow-[0_0_20px_rgba(249,115,22,0.35)] transition-all cursor-pointer min-h-[36px]"
+                className={`india-hub-btn flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border text-xs font-mono font-black transition-all cursor-pointer min-h-[36px] ${
+                  theme === 'light'
+                    ? 'border-orange-500 text-slate-950 shadow-[0_2px_8px_rgba(234,88,12,0.18)] hover:shadow-[0_4px_14px_rgba(234,88,12,0.25)]'
+                    : 'bg-gradient-to-r from-orange-500/20 via-black/70 to-emerald-500/20 border-orange-500/40 hover:border-orange-400 text-orange-300 hover:text-white shadow-[0_0_15px_rgba(249,115,22,0.2)] hover:shadow-[0_0_20px_rgba(249,115,22,0.35)]'
+                }`}
               >
-                <span>🇮🇳</span>
-                <span className="hidden sm:inline">India Hub</span>
+                <span className="text-sm">🇮🇳</span>
+                <span className={`hidden sm:inline ${theme === 'light' ? 'text-slate-950 font-black tracking-wide' : 'text-orange-300'}`}>India Hub</span>
               </button>
             )}
 
@@ -225,7 +280,11 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
             <button
               onClick={onOpenThresholds}
               title="Configure Alert Thresholds"
-              className="p-1.5 sm:p-2 rounded-lg bg-black/50 backdrop-blur-md border border-white/10 text-slate-300 hover:text-orange-400 hover:border-orange-500/40 hover:shadow-[0_0_12px_rgba(249,115,22,0.2)] transition-all min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
+              className={`p-1.5 sm:p-2 rounded-lg border transition-all min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer ${
+                theme === 'light'
+                  ? 'bg-white border-orange-300 text-slate-800 hover:text-orange-600 hover:border-orange-500 shadow-sm'
+                  : 'bg-black/50 backdrop-blur-md border-white/10 text-slate-300 hover:text-orange-400 hover:border-orange-500/40 hover:shadow-[0_0_12px_rgba(249,115,22,0.2)]'
+              }`}
             >
               <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
@@ -245,7 +304,11 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
             <button
               onClick={onOpenWidgets}
               title="Customize Widgets"
-              className="p-1.5 sm:p-2 rounded-lg bg-black/50 backdrop-blur-md border border-white/10 text-slate-300 hover:text-orange-400 hover:border-orange-500/40 hover:shadow-[0_0_12px_rgba(249,115,22,0.2)] transition-all min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
+              className={`p-1.5 sm:p-2 rounded-lg border transition-all min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer ${
+                theme === 'light'
+                  ? 'bg-white border-orange-300 text-slate-800 hover:text-orange-600 hover:border-orange-500 shadow-sm'
+                  : 'bg-black/50 backdrop-blur-md border-white/10 text-slate-300 hover:text-orange-400 hover:border-orange-500/40 hover:shadow-[0_0_12px_rgba(249,115,22,0.2)]'
+              }`}
             >
               <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>

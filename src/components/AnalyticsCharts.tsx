@@ -20,6 +20,7 @@ interface AnalyticsChartsProps {
   anomalies: ThermalAnomaly[];
   onSelectSector?: (sector: string) => void;
   onSelectAnomaly?: (anomaly: ThermalAnomaly) => void;
+  theme?: 'dark' | 'light';
 }
 
 const COLORS = ['#f43f5e', '#f97316', '#f59e0b', '#06b6d4', '#a855f7', '#10b981'];
@@ -27,8 +28,20 @@ const COLORS = ['#f43f5e', '#f97316', '#f59e0b', '#06b6d4', '#a855f7', '#10b981'
 export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({ 
   anomalies, 
   onSelectSector,
-  onSelectAnomaly 
+  onSelectAnomaly,
+  theme = 'dark'
 }) => {
+  const isLight = theme === 'light';
+  const axisTextColor = isLight ? '#0f172a' : '#94a3b8';
+  const tooltipStyle = {
+    backgroundColor: isLight ? '#ffffff' : 'rgba(5, 7, 12, 0.95)',
+    borderColor: isLight ? 'rgba(234, 88, 12, 0.4)' : 'rgba(249, 115, 22, 0.4)',
+    borderRadius: '12px',
+    fontFamily: 'monospace',
+    fontSize: '11px',
+    boxShadow: isLight ? '0 8px 24px rgba(0,0,0,0.12)' : '0 8px 30px rgba(0,0,0,0.8)',
+    color: isLight ? '#0f172a' : '#f8fafc',
+  };
   // 1. Sector Threat Breakdown
   const sectorCountMap: Record<string, { count: number; rawType: string }> = {};
   anomalies.forEach((a) => {
@@ -109,19 +122,9 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
                   <stop offset="100%" stopColor="#ea580c" stopOpacity={0.3} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="range" tick={{ fill: '#94a3b8', fontSize: 10 }} />
-              <YAxis tick={{ fill: '#94a3b8', fontSize: 10 }} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'rgba(5, 7, 12, 0.95)',
-                  borderColor: 'rgba(249, 115, 22, 0.4)',
-                  borderRadius: '12px',
-                  fontFamily: 'monospace',
-                  fontSize: '11px',
-                  boxShadow: '0 8px 30px rgba(0,0,0,0.8)',
-                  color: '#f8fafc',
-                }}
-              />
+              <XAxis dataKey="range" tick={{ fill: axisTextColor, fontSize: 11, fontWeight: 700 }} />
+              <YAxis tick={{ fill: axisTextColor, fontSize: 11, fontWeight: 700 }} />
+              <Tooltip contentStyle={tooltipStyle} />
               <Bar dataKey="count" fill="url(#orangeBarGradient)" stroke="#f97316" strokeWidth={1} radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -132,12 +135,12 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
       <div className="glass-panel rounded-2xl p-3 sm:p-4 shadow-[0_12px_40px_rgba(0,0,0,0.85)] border border-orange-500/25 flex flex-col">
         <div className="flex items-center justify-between pb-2 border-b border-orange-500/20 mb-2 sm:mb-3">
           <div className="flex items-center gap-1.5 sm:gap-2">
-            <PieIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 flex-shrink-0" />
-            <h3 className="text-xs font-bold font-mono uppercase text-amber-300">
+            <PieIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 flex-shrink-0" />
+            <h3 className={`text-xs font-bold font-mono uppercase ${isLight ? 'text-amber-800' : 'text-amber-300'}`}>
               Hazard Sector Exposure
             </h3>
           </div>
-          <span className="text-[10px] font-mono text-orange-400/80">Click to filter</span>
+          <span className={`text-[10px] font-mono ${isLight ? 'text-orange-700 font-bold' : 'text-orange-400/80'}`}>Click to filter</span>
         </div>
 
         <div className="h-40 sm:h-44 w-full flex items-center justify-center">
@@ -162,17 +165,7 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="rgba(0,0,0,0.5)" strokeWidth={1.5} />
                 ))}
               </Pie>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'rgba(5, 7, 12, 0.95)',
-                  borderColor: 'rgba(249, 115, 22, 0.4)',
-                  borderRadius: '12px',
-                  fontFamily: 'monospace',
-                  fontSize: '11px',
-                  boxShadow: '0 8px 30px rgba(0,0,0,0.8)',
-                  color: '#f8fafc',
-                }}
-              />
+              <Tooltip contentStyle={tooltipStyle} />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -182,12 +175,12 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
       <div className="glass-panel rounded-2xl p-3 sm:p-4 shadow-[0_12px_40px_rgba(0,0,0,0.85)] border border-orange-500/25 flex flex-col md:col-span-2 xl:col-span-1">
         <div className="flex items-center justify-between pb-2 border-b border-orange-500/20 mb-2 sm:mb-3">
           <div className="flex items-center gap-1.5 sm:gap-2">
-            <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-400 flex-shrink-0" />
-            <h3 className="text-xs font-bold font-mono uppercase text-rose-300">
+            <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-500 flex-shrink-0" />
+            <h3 className={`text-xs font-bold font-mono uppercase ${isLight ? 'text-rose-800' : 'text-rose-300'}`}>
               Proximity Danger Matrix
             </h3>
           </div>
-          <span className="text-[10px] font-mono text-orange-400/80">Click to inspect</span>
+          <span className={`text-[10px] font-mono ${isLight ? 'text-orange-700 font-bold' : 'text-orange-400/80'}`}>Click to inspect</span>
         </div>
 
         <div className="h-40 sm:h-44 w-full">
@@ -198,26 +191,18 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({
                 dataKey="distance"
                 name="Distance"
                 unit="km"
-                tick={{ fill: '#94a3b8', fontSize: 10 }}
+                tick={{ fill: axisTextColor, fontSize: 11, fontWeight: 700 }}
               />
               <YAxis
                 type="number"
                 dataKey="frp"
                 name="FRP"
                 unit="MW"
-                tick={{ fill: '#94a3b8', fontSize: 10 }}
+                tick={{ fill: axisTextColor, fontSize: 11, fontWeight: 700 }}
               />
               <Tooltip
                 cursor={{ strokeDasharray: '3 3' }}
-                contentStyle={{
-                  backgroundColor: 'rgba(5, 7, 12, 0.95)',
-                  borderColor: 'rgba(249, 115, 22, 0.4)',
-                  borderRadius: '12px',
-                  fontFamily: 'monospace',
-                  fontSize: '11px',
-                  boxShadow: '0 8px 30px rgba(0,0,0,0.8)',
-                  color: '#f8fafc',
-                }}
+                contentStyle={tooltipStyle}
               />
               <Scatter 
                 name="Threat Hotspots" 

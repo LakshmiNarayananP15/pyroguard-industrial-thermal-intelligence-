@@ -17,11 +17,18 @@ import {
   NotificationThresholds, 
   GISLayerConfig, 
   WidgetVisibilityState,
-  FIRMSFeedStatus
+  FIRMSFeedStatus,
+  AppTheme
 } from './types';
 import { playEmergencySiren, playDispatchChirp, playRadarPing } from './utils/audioAlert';
 
 export default function App() {
+  // Theme State
+  const [theme, setTheme] = useState<AppTheme>(() => {
+    const saved = localStorage.getItem('pyroguard_theme');
+    return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+  });
+
   // State
   const [anomalies, setAnomalies] = useState<ThermalAnomaly[]>([]);
   const [facilities, setFacilities] = useState<IndustrialFacility[]>([]);
@@ -63,8 +70,8 @@ export default function App() {
   });
 
   // GIS Configuration
-  const [gisConfig, setGisConfig] = useState<GISLayerConfig>({
-    mapStyle: 'dark',
+  const [gisConfig, setGisConfig] = useState<GISLayerConfig>(() => ({
+    mapStyle: ((localStorage.getItem('pyroguard_theme') === 'light') ? 'light' : 'dark') as 'dark' | 'light',
     showThermalOverlay: true,
     showFacilityMarkers: true,
     showBlastZones: true,
@@ -74,7 +81,39 @@ export default function App() {
     minFRPFilter: 0,
     selectedFacilityType: 'ALL',
     selectedSeverity: 'ALL',
-  });
+  }));
+
+  // Sync theme with document class and data-theme attribute
+  useEffect(() => {
+    localStorage.setItem('pyroguard_theme', theme);
+    const root = document.documentElement;
+    if (theme === 'light') {
+      root.classList.add('light');
+      root.classList.remove('dark');
+      root.setAttribute('data-theme', 'light');
+    } else {
+      root.classList.add('dark');
+      root.classList.remove('light');
+      root.setAttribute('data-theme', 'dark');
+    }
+  }, [theme]);
+
+  // Toggle theme and dynamically switch base map if it's currently on dark/light
+  const handleToggleTheme = () => {
+    setTheme((prev) => {
+      const nextTheme: AppTheme = prev === 'dark' ? 'light' : 'dark';
+      setGisConfig((prevGis) => {
+        if (prevGis.mapStyle === 'dark' && nextTheme === 'light') {
+          return { ...prevGis, mapStyle: 'light' };
+        }
+        if (prevGis.mapStyle === 'light' && nextTheme === 'dark') {
+          return { ...prevGis, mapStyle: 'dark' };
+        }
+        return prevGis;
+      });
+      return nextTheme;
+    });
+  };
 
   // Widget Visibility State
   const [widgets, setWidgets] = useState<WidgetVisibilityState>({
@@ -260,14 +299,16 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen bg-[#030508] bg-ambient-glow text-slate-100 flex flex-col selection:bg-orange-500/40 selection:text-orange-200 relative overflow-x-hidden">
+    <div className={`min-h-screen ${theme === 'light' ? 'light bg-[#f8fafc] text-slate-900' : 'dark bg-[#030508] text-slate-100'} bg-ambient-glow flex flex-col selection:bg-orange-500/40 selection:text-orange-200 relative overflow-x-hidden transition-colors duration-300`}>
       {/* Ambient background tactical glow elements */}
-      <div className="fixed top-0 left-1/4 w-96 h-96 bg-orange-600/10 rounded-full blur-[140px] pointer-events-none -z-10" />
-      <div className="fixed top-1/3 right-10 w-80 h-80 bg-amber-500/5 rounded-full blur-[120px] pointer-events-none -z-10" />
-      <div className="fixed bottom-10 left-10 w-96 h-96 bg-orange-700/5 rounded-full blur-[160px] pointer-events-none -z-10" />
+      <div className={`fixed top-0 left-1/4 w-96 h-96 ${theme === 'light' ? 'bg-orange-400/5' : 'bg-orange-600/10'} rounded-full blur-[140px] pointer-events-none -z-10`} />
+      <div className={`fixed top-1/3 right-10 w-80 h-80 ${theme === 'light' ? 'bg-amber-300/5' : 'bg-amber-500/5'} rounded-full blur-[120px] pointer-events-none -z-10`} />
+      <div className={`fixed bottom-10 left-10 w-96 h-96 ${theme === 'light' ? 'bg-orange-300/5' : 'bg-orange-700/5'} rounded-full blur-[160px] pointer-events-none -z-10`} />
       
       {/* 1. Header & Live Telemetry HUD */}
       <HeaderHUD
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
         anomalies={anomalies}
         alerts={alerts}
         firmsStatus={firmsStatus}
@@ -354,6 +395,7 @@ export default function App() {
             anomalies={filteredAnomalies} 
             onSelectSector={setSelectedSector}
             onSelectAnomaly={setSelectedAnomaly}
+            theme={theme}
           />
         )}
 
@@ -441,15 +483,17 @@ export default function App() {
       )}
 
       {/* Footer */}
-      <footer className="bg-slate-950 border-t border-slate-900 px-4 py-2.5 text-center text-xs font-mono text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <footer className={`px-4 py-2.5 text-center text-xs font-mono flex flex-col sm:flex-row items-center justify-between gap-2 border-t transition-colors ${
+        theme === 'light' ? 'bg-white border-orange-500/20 text-slate-700' : 'bg-slate-950 border-slate-900 text-slate-500'
+      }`}>
         <div className="flex items-center gap-2">
-          <span className="text-slate-400 font-bold">PYROGUARD v2.4</span>
+          <span className={theme === 'light' ? 'text-slate-900 font-extrabold' : 'text-slate-400 font-bold'}>PYROGUARD v2.4</span>
           <span>•</span>
           <span>NASA FIRMS VIIRS & MODIS Telemetry Engine</span>
           <span>•</span>
           <span>Spatial Proximity & Blast Radius Modeling</span>
         </div>
-        <div className="flex items-center gap-3 text-[11px] text-slate-400">
+        <div className={`flex items-center gap-3 text-[11px] ${theme === 'light' ? 'text-slate-700 font-medium' : 'text-slate-400'}`}>
           <span>NFPA 30 & OSHA 1910.119 Auditing</span>
           <span>•</span>
           <span>OGC GeoJSON / WMS Synchronized</span>
